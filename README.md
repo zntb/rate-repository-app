@@ -94,3 +94,30 @@ export default RepositoryList;
 _Do not_ alter the contents of the `repositories` variable, it should contain everything you need to complete this exercise. Render the `RepositoryList` component in the `Main` component which we previously added to the _Main.jsx_ file. The reviewed repository list should roughly look something like this:
 
 ![Exercise 10.3 - Reviewed repositories list](assets/5.jpg)
+
+## Exercise 10.4: the app bar
+
+We will soon need to navigate between different views in our application. That is why we need an [app bar](https://m2.material.io/components/app-bars-top) to display tabs for switching between different views. Create a file AppBar.jsx in the components folder with the following content:
+
+```jsx
+import { View, StyleSheet } from 'react-native';
+import Constants from 'expo-constants';
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: Constants.statusBarHeight,
+    // ...
+  },
+  // ...
+});
+
+const AppBar = () => {
+  return <View style={styles.container}>{/* ... */}</View>;
+};
+
+export default AppBar;
+```
+
+Now that the `AppBar` component will prevent the status bar from overlapping the content, you can remove the `marginTop` style we added for the `Main` component earlier in the Main.jsx file. The AppBar component should currently contain a tab with the text "`Repositories`". Make the tab [pressable](https://reactnative.dev/docs/pressable) by using the Pressable component but you don't have to handle the `onPress` event in any way. Add the `AppBar` component to the Main component so that it is the uppermost component on the screen. The `AppBar` component should look something like this:
+
+![Exercise 10.4 - App bar](assets/6.jpg)
