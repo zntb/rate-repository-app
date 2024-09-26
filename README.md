@@ -121,3 +121,11 @@ export default AppBar;
 Now that the `AppBar` component will prevent the status bar from overlapping the content, you can remove the `marginTop` style we added for the `Main` component earlier in the Main.jsx file. The AppBar component should currently contain a tab with the text "`Repositories`". Make the tab [pressable](https://reactnative.dev/docs/pressable) by using the Pressable component but you don't have to handle the `onPress` event in any way. Add the `AppBar` component to the Main component so that it is the uppermost component on the screen. The `AppBar` component should look something like this:
 
 ![Exercise 10.4 - App bar](assets/6.jpg)
+
+## Exercise 10.5: polished reviewed repositories list
+
+The current version of the reviewed repositories list looks quite grim. Modify the _RepositoryItem_ component so that it also displays the repository author's avatar image. You can implement this by using the [Image](https://reactnative.dev/docs/image) component. Counts, such as the number of stars and forks, larger than or equal to 1000 should be displayed in thousands with the precision of one decimal and with a "k" suffix. This means that for example fork count of 8439 should be displayed as "8.4k". Also, polish the overall look of the component so that the reviewed repositories list looks something like this:
+
+![Exercise 10.5 - Polished reviewed repositories list](assets/7.jpg)
+
+In the image, the `Main` component's background color is set to `#e1e4e8` whereas `RepositoryItem` component's background color is set to `white`. The language tag's background color is `#0366d6` which is the value of the `colors.primary` variable in the theme configuration. Remember to exploit the `Text` component we implemented earlier. Also when needed, split the `RepositoryItem` component into smaller components.
