@@ -185,3 +185,17 @@ You can use the [secureTextEntry](https://reactnative.dev/docs/textinput#securet
 The sign-in form should look something like this:
 
 ![Exercise 10.8 - Sign-in form](assets/19.jpg)
+
+## Exercise 10.9: validating the sign-in form
+
+Validate the sign-in form so that both username and password fields are required. Note that the onSubmit callback implemented in the previous exercise, _should not be called_ if the form validation fails.
+
+The current implementation of the `TextInput` component should display an error message if a touched field has an error. Emphasize this error message by giving it a red color.
+
+On top of the red error message, give an invalid field a visual indication of an error by giving it a red border color. Remember that if a field has an error, the `TextInput` component sets the `TextInput` component's `error` prop as `true`. You can use the value of the `error` prop to attach conditional styles to the `TextInput` component.
+
+Here's what the sign-in form should roughly look like with an invalid field:
+
+![Exercise 10.9 - Sign-in form with an invalid field](assets/8.jpg)
+
+The red color used in this implementation is `#d73a4a`.
