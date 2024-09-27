@@ -129,3 +129,19 @@ The current version of the reviewed repositories list looks quite grim. Modify t
 ![Exercise 10.5 - Polished reviewed repositories list](assets/7.jpg)
 
 In the image, the `Main` component's background color is set to `#e1e4e8` whereas `RepositoryItem` component's background color is set to `white`. The language tag's background color is `#0366d6` which is the value of the `colors.primary` variable in the theme configuration. Remember to exploit the `Text` component we implemented earlier. Also when needed, split the `RepositoryItem` component into smaller components.
+
+## Exercise 10.6: the sign-in view
+
+We will soon implement a form, that a user can use to _sign in_ to our application. Before that, we must implement a view that can be accessed from the app bar. Create a file _SignIn.jsx_ in the components directory with the following content:
+
+```jsx
+import Text from './Text';
+
+const SignIn = () => {
+  return <Text>The sign-in view</Text>;
+};
+
+export default SignIn;
+```
+
+Set up a route for this `SignIn` component in the Main component. Also, add a tab with the text "Sign in" to the app bar next to the "Repositories" tab. Users should be able to navigate between the two views by pressing the tabs (hint: you can use the React router's [Link](https://reactrouter.com/en/6.4.5/components/link-native) component).
