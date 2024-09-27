@@ -145,3 +145,21 @@ export default SignIn;
 ```
 
 Set up a route for this `SignIn` component in the Main component. Also, add a tab with the text "Sign in" to the app bar next to the "Repositories" tab. Users should be able to navigate between the two views by pressing the tabs (hint: you can use the React router's [Link](https://reactrouter.com/en/6.4.5/components/link-native) component).
+
+## Exercise 10.7: scrollable app bar
+
+As we are adding more tabs to our app bar, it is a good idea to allow horizontal scrolling once the tabs won't fit the screen. The [ScrollView](https://reactnative.dev/docs/scrollview) component is just the right component for the job.
+
+Wrap the tabs in the AppBar component's tabs with a `ScrollView` component:
+
+```jsx
+const AppBar = () => {
+  return (
+    <View style={styles.container}>
+      <ScrollView horizontal>{/* ... */}</ScrollView>
+    </View>
+  );
+};
+```
+
+Setting the [horizontal](https://reactnative.dev/docs/scrollview#horizontal) prop true will cause the `ScrollView` component to scroll horizontally once the content won't fit the screen. Note that, you will need to add suitable style properties to the `ScrollView` component so that the tabs will be laid in a row inside the flex container. You can make sure that the app bar can be scrolled horizontally by adding tabs until the last tab won't fit the screen. Just remember to remove the extra tabs once the app bar is working as intended.
