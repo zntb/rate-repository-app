@@ -163,3 +163,25 @@ const AppBar = () => {
 ```
 
 Setting the [horizontal](https://reactnative.dev/docs/scrollview#horizontal) prop true will cause the `ScrollView` component to scroll horizontally once the content won't fit the screen. Note that, you will need to add suitable style properties to the `ScrollView` component so that the tabs will be laid in a row inside the flex container. You can make sure that the app bar can be scrolled horizontally by adding tabs until the last tab won't fit the screen. Just remember to remove the extra tabs once the app bar is working as intended.
+
+## Exercise 10.8: the sign-in form
+
+Implement a sign-in form to the `SignIn` component we added earlier in the _SignIn.jsx_ file. The sign-in form should include two text fields, one for the username and one for the password. There should also be a button for submitting the form. You don't need to implement an `onSubmit` callback function, it is enough that the form values are logged using `console.log` when the form is submitted:
+
+```jsx
+const onSubmit = values => {
+  console.log(values);
+};
+```
+
+The first step is to install Formik:
+
+```bash
+npm install formik
+```
+
+You can use the [secureTextEntry](https://reactnative.dev/docs/textinput#securetextentry) prop in the TextInput component to obscure the password input.
+
+The sign-in form should look something like this:
+
+![Exercise 10.8 - Sign-in form](assets/19.jpg)
