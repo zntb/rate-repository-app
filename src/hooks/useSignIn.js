@@ -24,6 +24,7 @@ const useSignIn = () => {
 
         await apolloClient.resetStore();
 
+        console.log('Signed in as ' + username);
         navigate('/');
       }
 
