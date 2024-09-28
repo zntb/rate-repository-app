@@ -309,3 +309,22 @@ const { data } = await mutate(/* options */);
 await authStorage.setAccessToken(/* access token from the data */);
 apolloClient.resetStore();
 ```
+
+## Exercise 10.16: sign out
+
+The final step in completing the sign in feature is to implement a sign out feature. The me query can be used to check the authenticated user's information. If the query's result is `null`, that means that the user is not authenticated. Open the Apollo Sandbox and run the following query:
+
+```graphql
+{
+  me {
+    id
+    username
+  }
+}
+```
+
+You will probably end up with the `null` result. This is because the Apollo Sandbox is not authenticated, meaning that it doesn't send a valid access token with the request. Revise the [authentication documentation](https://github.com/fullstack-hy2020/rate-repository-api#-authentication) and retrieve an access token using the `authenticate` mutation. Use this access token in the `Authorization` header as instructed in the documentation. Now, run the me query again and you should be able to see the authenticated user's information.
+
+Open the AppBar component in the AppBar.jsx file where you currently have the tabs "Repositories" and "Sign in". Change the tabs so that if the user is signed in the tab "Sign out" is displayed, otherwise show the "Sign in" tab. You can achieve this by using the me query with the [useQuery](https://www.apollographql.com/docs/react/api/react/hooks/#usequery) hook.
+
+Pressing the "Sign out" tab should remove the user's access token from the storage and reset the Apollo Client's store with the [resetStore](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.resetStore) method. Calling the `resetStore` method should automatically re-execute all active queries which means that the me query should be re-executed. Note that the order of execution is crucial: access token must be removed from the storage _before_ the Apollo Client's store is reset.
