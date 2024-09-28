@@ -20,14 +20,7 @@ const SignIn = () => {
     const { username, password } = values;
 
     try {
-      const data = await signIn({ username, password });
-
-      if (data && data.authenticate && data.authenticate.accessToken) {
-        console.log(
-          'Signed in successfully, token:',
-          data.authenticate.accessToken,
-        );
-      }
+      await signIn({ username, password });
     } catch (e) {
       console.error('Sign-in failed:', e);
     }
