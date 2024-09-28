@@ -224,3 +224,46 @@ The changes in the `useRepositories` hook should not affect the `RepositoryList`
 Instead of the hardcoded Apollo Server's URL, use an environment variable defined in the .env file when initializing the Apollo Client. You can name the environment variable for example `APOLLO_URI`.
 
 Do not try to access environment variables like `process.env.APOLLO_URI` outside the _app.config.js_ file. Instead use the `Constants.expoConfig.extra` object like in the previous example. In addition, do not import the dotenv library outside the _app.config.js_ file or you will most likely face errors.
+
+## Exercise 10.13: the sign in form mutation
+
+The current implementation of the sign in form doesn't do much with the submitted user's credentials. Let's do something about that in this exercise. First, read the rate-repository-api server's [authentication documentation](https://github.com/fullstack-hy2020/rate-repository-api#-authentication) and test the provided queries and mutations in the Apollo Sandbox. If the database doesn't have any users, you can populate the database with some seed data. Instructions for this can be found in the [getting started](https://github.com/fullstack-hy2020/rate-repository-api#-getting-started) section of the README.
+
+Once you have figured out how the authentication works, create a file `useSignIn.js` file in the _hooks_ directory. In that file implement a `useSignIn` hook that sends the authenticate mutation using the [useMutation](https://www.apollographql.com/docs/react/api/react/hooks/#usemutation) hook. Note that the authenticate mutation has a single argument called `credentials`, which is of type `AuthenticateInput`. This [input type](https://graphql.org/graphql-js/mutations-and-input-types/) contains `username` and `password` fields.
+
+The return value of the hook should be a tuple `[signIn, result]` where `result` is the mutations result as it is returned by the `useMutation` hook and `signIn` a function that runs the mutation with a `{ username, password }` object argument. Hint: don't pass the mutation function to the return value directly. Instead, return a function that calls the mutation function like this:
+
+```jsx
+const useSignIn = () => {
+  const [mutate, result] = useMutation(/* mutation arguments */);
+
+  const signIn = async ({ username, password }) => {
+    // call the mutate function here with the right arguments
+  };
+
+  return [signIn, result];
+};
+```
+
+Once the hook is implemented, use it in the `SignIn` component's `onSubmit` callback for example like this:
+
+```jsx
+const SignIn = () => {
+  const [signIn] = useSignIn();
+
+  const onSubmit = async values => {
+    const { username, password } = values;
+
+    try {
+      const { data } = await signIn({ username, password });
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // ...
+};
+```
+
+This exercise is completed once you can log the user's _authenticate_ mutations result after the sign in form has been submitted. The mutation result should contain the user's access token.
