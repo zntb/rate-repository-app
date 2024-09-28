@@ -218,3 +218,9 @@ useQuery(MY_QUERY, {
 ```
 
 The changes in the `useRepositories` hook should not affect the `RepositoryList` component in any way.
+
+## Exercise 10.12: environment variables
+
+Instead of the hardcoded Apollo Server's URL, use an environment variable defined in the .env file when initializing the Apollo Client. You can name the environment variable for example `APOLLO_URI`.
+
+Do not try to access environment variables like `process.env.APOLLO_URI` outside the _app.config.js_ file. Instead use the `Constants.expoConfig.extra` object like in the previous example. In addition, do not import the dotenv library outside the _app.config.js_ file or you will most likely face errors.
