@@ -267,3 +267,33 @@ const SignIn = () => {
 ```
 
 This exercise is completed once you can log the user's _authenticate_ mutations result after the sign in form has been submitted. The mutation result should contain the user's access token.
+
+## Exercise 10.14: storing the access token step1
+
+Now that we can obtain the access token we need to store it. Create a file authStorage.js in the `utils` directory with the following content:
+
+```js
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+class AuthStorage {
+  constructor(namespace = 'auth') {
+    this.namespace = namespace;
+  }
+
+  getAccessToken() {
+    // Get the access token for the storage
+  }
+
+  setAccessToken(accessToken) {
+    // Add the access token to the storage
+  }
+
+  removeAccessToken() {
+    // Remove the access token from the storage
+  }
+}
+
+export default AuthStorage;
+```
+
+Next, implement the methods `AuthStorage.getAccessToken`, `AuthStorage.setAccessToken` and `AuthStorage.removeAccessToken`. Use the namespace variable to give your keys a namespace.
