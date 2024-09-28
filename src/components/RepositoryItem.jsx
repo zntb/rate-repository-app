@@ -1,83 +1,117 @@
 import { View, Image, StyleSheet } from 'react-native';
-import Text from './Text';
+
 import theme from '../theme';
+import Text from './Text';
+import formatInThousands from '../utils/formatInThousands';
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
     backgroundColor: 'white',
+    padding: 15,
   },
-  avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 5,
+  topContainer: {
+    flexDirection: 'row',
+    marginBottom: 15,
   },
-  languageTag: {
-    backgroundColor: theme.colors.primary,
-    color: 'white',
-    padding: 5,
-    borderRadius: 4,
-    alignSelf: 'flex-start',
-    marginTop: 5,
-  },
-  countsContainer: {
+  bottomContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 10,
+  },
+  avatarContainer: {
+    flexGrow: 0,
+    marginRight: 20,
+  },
+  contentContainer: {
+    flexGrow: 1,
+    flexShrink: 1,
+  },
+  nameText: {
+    marginBottom: 5,
+  },
+  descriptionText: {
+    flexGrow: 1,
+  },
+  avatar: {
+    width: 45,
+    height: 45,
+    borderRadius: theme.roundness,
   },
   countItem: {
+    flexGrow: 0,
     alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 15,
   },
-  textPrimary: {
-    color: theme.colors.textPrimary,
-    fontWeight: theme.fontWeights.bold,
+  countItemCount: {
+    marginBottom: 5,
   },
-  textSecondary: {
-    color: theme.colors.textSecondary,
+  languageContainer: {
+    marginTop: 10,
+    flexDirection: 'row',
+  },
+  languageText: {
+    color: 'white',
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.roundness,
+    flexGrow: 0,
+    paddingVertical: 3,
+    paddingHorizontal: 6,
   },
 });
 
-const formatCount = value => {
-  return value >= 1000 ? `${(value / 1000).toFixed(1)}k` : String(value);
+const CountItem = ({ label, count }) => {
+  return (
+    <View style={styles.countItem}>
+      <Text style={styles.countItemCount} fontWeight='bold'>
+        {formatInThousands(count)}
+      </Text>
+      <Text color='textSecondary'>{label}</Text>
+    </View>
+  );
 };
 
-const RepositoryItem = ({ item }) => {
+const RepositoryItem = ({ repository }) => {
+  const {
+    fullName,
+    description,
+    language,
+    forksCount,
+    stargazersCount,
+    ratingAverage,
+    reviewCount,
+    ownerAvatarUrl,
+  } = repository;
+
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: 'row' }}>
-        <Image source={{ uri: item.ownerAvatarUrl }} style={styles.avatar} />
-        <View style={{ marginLeft: 15, flex: 1 }}>
+      <View style={styles.topContainer}>
+        <View style={styles.avatarContainer}>
+          <Image source={{ uri: ownerAvatarUrl }} style={styles.avatar} />
+        </View>
+        <View style={styles.contentContainer}>
           <Text
+            style={styles.nameText}
             fontWeight='bold'
             fontSize='subheading'
-            style={styles.textPrimary}
+            numberOfLines={1}
           >
-            {item.fullName}
+            {fullName}
           </Text>
-          <Text color='textSecondary' style={styles.textSecondary}>
-            {item.description}
+          <Text style={styles.descriptionText} color='textSecondary'>
+            {description}
           </Text>
-          <Text style={styles.languageTag}>{item.language}</Text>
+          {language ? (
+            <View style={styles.languageContainer}>
+              <Text style={styles.languageText}>{language}</Text>
+            </View>
+          ) : null}
         </View>
       </View>
-
-      <View style={styles.countsContainer}>
-        <View style={styles.countItem}>
-          <Text fontWeight='bold'>{formatCount(item.stargazersCount)}</Text>
-          <Text color='textSecondary'>Stars</Text>
-        </View>
-        <View style={styles.countItem}>
-          <Text fontWeight='bold'>{formatCount(item.forksCount)}</Text>
-          <Text color='textSecondary'>Forks</Text>
-        </View>
-        <View style={styles.countItem}>
-          <Text fontWeight='bold'>{formatCount(item.reviewCount)}</Text>
-          <Text color='textSecondary'>Reviews</Text>
-        </View>
-        <View style={styles.countItem}>
-          <Text fontWeight='bold'>{item.ratingAverage}</Text>
-          <Text color='textSecondary'>Rating</Text>
-        </View>
+      <View style={styles.bottomContainer}>
+        <CountItem count={stargazersCount} label='Stars' />
+        <CountItem count={forksCount} label='Forks' />
+        <CountItem count={reviewCount} label='Reviews' />
+        <CountItem count={ratingAverage} label='Rating' />
       </View>
     </View>
   );

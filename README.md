@@ -203,3 +203,18 @@ The red color used in this implementation is `#d73a4a`.
 ## Exercise 10.10: a platform-specific font
 
 Currently, the font family of our application is set to `System` in the theme configuration located in the `theme.js` file. Instead of the `System` font, use a platform-specific [Sans-serif](https://en.wikipedia.org/wiki/Sans-serif) font. On the Android platform, use the `Roboto` font and on the iOS platform, use the `Arial` font. The default font can be `System`.
+
+## Exercise 10.11: fetching repositories with Apollo Client
+
+We want to replace the Fetch API implementation in the `useRepositories` hook with a GraphQL query. Open the Apollo Sandbox at <http://localhost:4000> and take a look at the documentation next to the operations editor. Look up the `repositories` query. The query has some arguments, however, all of these are optional so you don't need to specify them. In the Apollo Sandbox form a query for fetching the repositories with the fields you are currently displaying in the application. The result will be paginated and it contains the up to first 30 results by default. For now, you can ignore the pagination entirely.
+
+Once the query is working in the Apollo Sandbox, use it to replace the Fetch API implementation in the `useRepositories` hook. This can be achieved using the [useQuery hook](https://www.apollographql.com/docs/react/api/react/hooks/#usequery). The gql template literal tag can be imported from the _@apollo/client_ library as instructed earlier. Consider using the structure recommended earlier for the GraphQL related code. To avoid future caching issues, use the cache-and-network [fetch policy](https://www.apollographql.com/docs/react/data/queries/#setting-a-fetch-policy) in the query. It can be used with the `useQuery` hook like this:
+
+```jsx
+useQuery(MY_QUERY, {
+  fetchPolicy: 'cache-and-network',
+  // Other options
+});
+```
+
+The changes in the `useRepositories` hook should not affect the `RepositoryList` component in any way.
