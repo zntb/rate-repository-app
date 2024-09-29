@@ -1,7 +1,9 @@
 import { View, Image, StyleSheet } from 'react-native';
+import * as Linking from 'expo-linking';
 
 import theme from '../theme';
 import Text from './Text';
+import Button from './Button';
 import formatInThousands from '../utils/formatInThousands';
 
 const styles = StyleSheet.create({
@@ -57,6 +59,10 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     paddingHorizontal: 6,
   },
+
+  githubButton: {
+    marginTop: 15,
+  },
 });
 
 const CountItem = ({ label, count, testID }) => {
@@ -70,7 +76,7 @@ const CountItem = ({ label, count, testID }) => {
   );
 };
 
-const RepositoryItem = ({ repository }) => {
+const RepositoryItem = ({ repository, showGithubButton }) => {
   const {
     fullName,
     description,
@@ -80,7 +86,12 @@ const RepositoryItem = ({ repository }) => {
     ratingAverage,
     reviewCount,
     ownerAvatarUrl,
+    url,
   } = repository;
+
+  const handleOpenInGitHub = () => {
+    Linking.openURL(url);
+  };
 
   return (
     <View style={styles.container} testID='repositoryItem'>
@@ -119,6 +130,11 @@ const RepositoryItem = ({ repository }) => {
         <CountItem testID='reviews' count={reviewCount} label='Reviews' />
         <CountItem testID='rating' count={ratingAverage} label='Rating' />
       </View>
+      {showGithubButton && (
+        <Button style={styles.githubButton} onPress={handleOpenInGitHub}>
+          Open in GitHub
+        </Button>
+      )}
     </View>
   );
 };
