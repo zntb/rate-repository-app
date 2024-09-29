@@ -412,3 +412,33 @@ describe('RepositoryList', () => {
 ```
 
 You can put the test file where you please. However, it is recommended to follow one of the ways of organizing test files introduced earlier. Use the `repositories` variable as the repository data for the test. There should be no need to alter the variable's value. Note that the repository data contains two repositories, which means that you need to check that both repositories' information is present.
+
+## Exercise 10.18: testing the sign in form
+
+Implement a test that ensures that filling the sign in form's username and password fields and pressing the submit button will call the `onSubmit` handler with _correct arguments_. The _first argument_ of the handler should be an object representing the form's values. You can ignore the other arguments of the function. Remember that the fireEvent methods can be used for triggering events and a mock function for checking whether the onSubmit handler is called or not.
+
+You don't have to test any Apollo Client or AsyncStorage related code which is in the useSignIn hook. As in the previous exercise, extract the pure code into its own component and test it in the test.
+
+Note that Formik's form submissions are asynchronous so expecting the `onSubmit` function to be called immediately after pressing the submit button won't work. You can get around this issue by making the test function an async function using the async keyword and using the React Native Testing Library's waitFor helper function. The `waitFor` function can be used to wait for expectations to pass. If the expectations don't pass within a certain period, the function will throw an error. Here is a rough example of how to use it:
+
+```js
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+} from '@testing-library/react-native';
+// ...
+
+describe('SignIn', () => {
+  describe('SignInContainer', () => {
+    it('calls onSubmit function with correct arguments when a valid form is submitted', async () => {
+      // render the SignInContainer component, fill the text inputs and press the submit button
+
+      await waitFor(() => {
+        // expect the onSubmit function to have been called once and with a correct first argument
+      });
+    });
+  });
+});
+```
