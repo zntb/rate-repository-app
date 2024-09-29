@@ -24,9 +24,7 @@ const Button = ({ children, style, ...props }) => {
   return (
     <Pressable {...props}>
       <View style={buttonStyle}>
-        <Text style={styles.text} fontWeight='bold'>
-          {children}
-        </Text>
+        <Text style={styles.text} fontWeight="bold">{children}</Text>
       </View>
     </Pressable>
   );

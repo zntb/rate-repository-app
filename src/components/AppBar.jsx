@@ -1,12 +1,13 @@
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, Pressable, StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
-import { Link, useNavigate } from 'react-router-native';
-import { useApolloClient } from '@apollo/client';
+import { Link } from 'react-router-native';
+import { useApolloClient, useQuery } from '@apollo/client';
+import { useNavigate } from 'react-router-native';
 
 import theme from '../theme';
 import Text from './Text';
 import useAuthStorage from '../hooks/useAuthStorage';
-import useMe from '../hooks/useMe';
+import { GET_CURRENT_USER } from '../graphql/queries';
 
 const styles = StyleSheet.create({
   container: {
@@ -31,39 +32,44 @@ const styles = StyleSheet.create({
   },
 });
 
-const AppBarTab = ({ children, ...props }) => {
-  return (
-    <Link style={styles.tabTouchable} {...props}>
-      <View style={styles.tabContainer}>
-        <Text fontWeight='bold' style={styles.tabText}>
-          {children}
-        </Text>
-      </View>
+const AppBarTab = ({ children, to, ...props }) => {
+  const content = (
+    <View style={styles.tabContainer} {...props}>
+      <Text fontWeight='bold' style={styles.tabText}>
+        {children}
+      </Text>
+    </View>
+  );
+
+  return to ? (
+    <Link to={to} {...props}>
+      {content}
     </Link>
+  ) : (
+    <Pressable {...props}>{content}</Pressable>
   );
 };
 
 const AppBar = () => {
-  const { me } = useMe();
   const apolloClient = useApolloClient();
   const authStorage = useAuthStorage();
   const navigate = useNavigate();
 
-  const handleSignOut = async () => {
+  const { data } = useQuery(GET_CURRENT_USER);
+  const currentUser = data?.me;
+
+  const onSignOut = async () => {
     await authStorage.removeAccessToken();
-    await apolloClient.resetStore();
+    apolloClient.resetStore();
     navigate('/');
-    console.log('Signed out ' + me.username);
   };
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} horizontal>
         <AppBarTab to='/'>Repositories</AppBarTab>
-        {me ? (
-          <AppBarTab to='/' onPress={handleSignOut}>
-            Sign out
-          </AppBarTab>
+        {currentUser ? (
+          <AppBarTab onPress={onSignOut}>Sign out</AppBarTab>
         ) : (
           <AppBarTab to='/sign-in'>Sign in</AppBarTab>
         )}
