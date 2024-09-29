@@ -59,9 +59,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const CountItem = ({ label, count }) => {
+const CountItem = ({ label, count, testID }) => {
   return (
-    <View style={styles.countItem}>
+    <View style={styles.countItem} testID={testID}>
       <Text style={styles.countItemCount} fontWeight='bold'>
         {formatInThousands(count)}
       </Text>
@@ -83,7 +83,7 @@ const RepositoryItem = ({ repository }) => {
   } = repository;
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID='repositoryItem'>
       <View style={styles.topContainer}>
         <View style={styles.avatarContainer}>
           <Image source={{ uri: ownerAvatarUrl }} style={styles.avatar} />
@@ -97,21 +97,27 @@ const RepositoryItem = ({ repository }) => {
           >
             {fullName}
           </Text>
-          <Text style={styles.descriptionText} color='textSecondary'>
+          <Text
+            testID='description'
+            style={styles.descriptionText}
+            color='textSecondary'
+          >
             {description}
           </Text>
           {language ? (
             <View style={styles.languageContainer}>
-              <Text style={styles.languageText}>{language}</Text>
+              <Text testID='language' style={styles.languageText}>
+                {language}
+              </Text>
             </View>
           ) : null}
         </View>
       </View>
       <View style={styles.bottomContainer}>
-        <CountItem count={stargazersCount} label='Stars' />
-        <CountItem count={forksCount} label='Forks' />
-        <CountItem count={reviewCount} label='Reviews' />
-        <CountItem count={ratingAverage} label='Rating' />
+        <CountItem testID='stars' count={stargazersCount} label='Stars' />
+        <CountItem testID='forks' count={forksCount} label='Forks' />
+        <CountItem testID='reviews' count={reviewCount} label='Reviews' />
+        <CountItem testID='rating' count={ratingAverage} label='Rating' />
       </View>
     </View>
   );

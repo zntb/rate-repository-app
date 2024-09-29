@@ -1,30 +1,29 @@
 import { gql } from '@apollo/client';
-import { REPOSITORY_FIELDS } from './fragments';
+
+import { REPOSITORY_BASE_FIELDS, USER_BASE_FIELDS } from './fragments';
 
 export const GET_REPOSITORIES = gql`
-  query GetRepositories {
-    repositories(first: 30) {
+  query {
+    repositories {
       edges {
         node {
-          ...RepositoryFields
+          ...repositoryBaseFields
+          ratingAverage
+          reviewCount
         }
-        cursor
-      }
-      totalCount
-      pageInfo {
-        hasNextPage
-        endCursor
       }
     }
   }
-  ${REPOSITORY_FIELDS}
+
+  ${REPOSITORY_BASE_FIELDS}
 `;
 
-export const ME = gql`
+export const GET_CURRENT_USER = gql`
   query {
     me {
-      id
-      username
+      ...userBaseFields
     }
   }
+
+  ${USER_BASE_FIELDS}
 `;

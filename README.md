@@ -328,3 +328,87 @@ You will probably end up with the `null` result. This is because the Apollo Sand
 Open the AppBar component in the AppBar.jsx file where you currently have the tabs "Repositories" and "Sign in". Change the tabs so that if the user is signed in the tab "Sign out" is displayed, otherwise show the "Sign in" tab. You can achieve this by using the me query with the [useQuery](https://www.apollographql.com/docs/react/api/react/hooks/#usequery) hook.
 
 Pressing the "Sign out" tab should remove the user's access token from the storage and reset the Apollo Client's store with the [resetStore](https://www.apollographql.com/docs/react/api/core/ApolloClient/#ApolloClient.resetStore) method. Calling the `resetStore` method should automatically re-execute all active queries which means that the me query should be re-executed. Note that the order of execution is crucial: access token must be removed from the storage _before_ the Apollo Client's store is reset.
+
+## Exercise 10.17: testing the reviewed repositories list
+
+Implement a test that ensures that the `RepositoryListContainer` component renders repository's name, description, language, forks count, stargazers count, rating average, and review count correctly. One approach in implementing this test is to add a [testID](https://reactnative.dev/docs/view#testid) prop for the element wrapping a single repository's information:
+
+```jsx
+const RepositoryItem = (/* ... */) => {
+  // ...
+
+  return (
+    <View testID="repositoryItem" {/* ... */}>
+      {/* ... */}
+    </View>
+  )
+};
+```
+
+Once the `testID` prop is added, you can use the [getAllByTestId](https://callstack.github.io/react-native-testing-library/docs/api/queries#getallby) query to get those elements:
+
+```jsx
+const repositoryItems = screen.getAllByTestId('repositoryItem');
+const [firstRepositoryItem, secondRepositoryItem] = repositoryItems;
+
+// expect something from the first and the second repository item
+```
+
+Having those elements you can use the [toHaveTextContent](https://github.com/testing-library/jest-native#tohavetextcontent) matcher to check whether an element has certain textual content. You might also find the [Querying Within Elements](https://testing-library.com/docs/dom-testing-library/api-within/) guide useful. If you are unsure what is being rendered, use the [debug](https://callstack.github.io/react-native-testing-library/docs/api#debug) function to see the serialized rendering result.
+
+Use this as a base for your test:
+
+```jsx
+describe('RepositoryList', () => {
+  describe('RepositoryListContainer', () => {
+    it('renders repository information correctly', () => {
+      const repositories = {
+        totalCount: 8,
+        pageInfo: {
+          hasNextPage: true,
+          endCursor:
+            'WyJhc3luYy1saWJyYXJ5LnJlYWN0LWFzeW5jIiwxNTg4NjU2NzUwMDc2XQ==',
+          startCursor: 'WyJqYXJlZHBhbG1lci5mb3JtaWsiLDE1ODg2NjAzNTAwNzZd',
+        },
+        edges: [
+          {
+            node: {
+              id: 'jaredpalmer.formik',
+              fullName: 'jaredpalmer/formik',
+              description: 'Build forms in React, without the tears',
+              language: 'TypeScript',
+              forksCount: 1619,
+              stargazersCount: 21856,
+              ratingAverage: 88,
+              reviewCount: 3,
+              ownerAvatarUrl:
+                'https://avatars2.githubusercontent.com/u/4060187?v=4',
+            },
+            cursor: 'WyJqYXJlZHBhbG1lci5mb3JtaWsiLDE1ODg2NjAzNTAwNzZd',
+          },
+          {
+            node: {
+              id: 'async-library.react-async',
+              fullName: 'async-library/react-async',
+              description: 'Flexible promise-based React data loader',
+              language: 'JavaScript',
+              forksCount: 69,
+              stargazersCount: 1760,
+              ratingAverage: 72,
+              reviewCount: 3,
+              ownerAvatarUrl:
+                'https://avatars1.githubusercontent.com/u/54310907?v=4',
+            },
+            cursor:
+              'WyJhc3luYy1saWJyYXJ5LnJlYWN0LWFzeW5jIiwxNTg4NjU2NzUwMDc2XQ==',
+          },
+        ],
+      };
+
+      // Add your test code here
+    });
+  });
+});
+```
+
+You can put the test file where you please. However, it is recommended to follow one of the ways of organizing test files introduced earlier. Use the `repositories` variable as the repository data for the test. There should be no need to alter the variable's value. Note that the repository data contains two repositories, which means that you need to check that both repositories' information is present.
