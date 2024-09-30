@@ -6,8 +6,13 @@ export const GET_REPOSITORIES = gql`
   query GetRepositories(
     $orderBy: AllRepositoriesOrderBy
     $orderDirection: OrderDirection
+    $searchKeyword: String
   ) {
-    repositories(orderBy: $orderBy, orderDirection: $orderDirection) {
+    repositories(
+      orderBy: $orderBy
+      orderDirection: $orderDirection
+      searchKeyword: $searchKeyword
+    ) {
       edges {
         node {
           ...repositoryBaseFields
@@ -34,16 +39,7 @@ export const GET_CURRENT_USER = gql`
 export const GET_REPOSITORY = gql`
   query getRepository($id: ID!, $first: Int) {
     repository(id: $id) {
-      id
-      fullName
-      description
-      language
-      forksCount
-      stargazersCount
-      ratingAverage
-      reviewCount
-      ownerAvatarUrl
-      url
+      ...repositoryBaseFields
       reviews(first: $first) {
         edges {
           node {
@@ -60,4 +56,5 @@ export const GET_REPOSITORY = gql`
       }
     }
   }
+  ${REPOSITORY_BASE_FIELDS}
 `;

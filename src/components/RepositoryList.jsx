@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { FlatList, View, StyleSheet, Pressable } from 'react-native';
 import { useNavigate } from 'react-router-native';
 import RepositoryItem from './RepositoryItem';
 import useRepositories from '../hooks/useRepositories';
 import RepositoryListHeader from './RepositoryListHeader';
+import { useDebounce } from 'use-debounce';
 
 const styles = StyleSheet.create({
   separator: {
@@ -13,7 +14,42 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
+export class RepositoryListContainer extends React.Component {
+  renderHeader = () => {
+    const { searchQuery, setSearchQuery, selectedOrder, setSelectedOrder } =
+      this.props;
+    return (
+      <RepositoryListHeader
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        selectedOrder={selectedOrder}
+        setSelectedOrder={setSelectedOrder}
+      />
+    );
+  };
+
+  render() {
+    const { repositories, handlePress } = this.props;
+
+    return (
+      <FlatList
+        data={repositories}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <Pressable onPress={() => handlePress(item.id)}>
+            <RepositoryItem repository={item} />
+          </Pressable>
+        )}
+        ItemSeparatorComponent={ItemSeparator}
+        ListHeaderComponent={this.renderHeader}
+      />
+    );
+  }
+}
+
 const RepositoryList = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const [selectedOrder, setSelectedOrder] = useState('LATEST');
 
   const getOrderVariables = () => {
@@ -29,35 +65,30 @@ const RepositoryList = () => {
   };
 
   const { orderBy, orderDirection } = getOrderVariables();
-  const { repositories } = useRepositories({ orderBy, orderDirection });
+  const { repositories } = useRepositories({
+    orderBy,
+    orderDirection,
+    searchKeyword: debouncedSearchQuery,
+  });
+
   const navigate = useNavigate();
 
   const handlePress = id => {
     navigate(`/repository/${id}`);
   };
 
-  const renderItem = ({ item }) => (
-    <Pressable onPress={() => handlePress(item.id)}>
-      <RepositoryItem repository={item} />
-    </Pressable>
-  );
-
   const repositoryNodes = repositories
     ? repositories.edges.map(edge => edge.node)
     : [];
 
   return (
-    <FlatList
-      data={repositoryNodes}
-      keyExtractor={item => item.id}
-      renderItem={renderItem}
-      ItemSeparatorComponent={ItemSeparator}
-      ListHeaderComponent={
-        <RepositoryListHeader
-          selectedOrder={selectedOrder}
-          setSelectedOrder={setSelectedOrder}
-        />
-      }
+    <RepositoryListContainer
+      repositories={repositoryNodes}
+      handlePress={handlePress}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
+      selectedOrder={selectedOrder}
+      setSelectedOrder={setSelectedOrder}
     />
   );
 };
