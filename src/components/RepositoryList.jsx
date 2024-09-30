@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { FlatList, View, StyleSheet, Pressable } from 'react-native';
 import { useNavigate } from 'react-router-native';
 import RepositoryItem from './RepositoryItem';
 import useRepositories from '../hooks/useRepositories';
+import RepositoryListHeader from './RepositoryListHeader';
 
 const styles = StyleSheet.create({
   separator: {
@@ -12,7 +14,22 @@ const styles = StyleSheet.create({
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const RepositoryList = () => {
-  const { repositories } = useRepositories();
+  const [selectedOrder, setSelectedOrder] = useState('LATEST');
+
+  const getOrderVariables = () => {
+    switch (selectedOrder) {
+      case 'HIGHEST':
+        return { orderBy: 'RATING_AVERAGE', orderDirection: 'DESC' };
+      case 'LOWEST':
+        return { orderBy: 'RATING_AVERAGE', orderDirection: 'ASC' };
+      case 'LATEST':
+      default:
+        return { orderBy: 'CREATED_AT', orderDirection: 'DESC' };
+    }
+  };
+
+  const { orderBy, orderDirection } = getOrderVariables();
+  const { repositories } = useRepositories({ orderBy, orderDirection });
   const navigate = useNavigate();
 
   const handlePress = id => {
@@ -35,6 +52,12 @@ const RepositoryList = () => {
       keyExtractor={item => item.id}
       renderItem={renderItem}
       ItemSeparatorComponent={ItemSeparator}
+      ListHeaderComponent={
+        <RepositoryListHeader
+          selectedOrder={selectedOrder}
+          setSelectedOrder={setSelectedOrder}
+        />
+      }
     />
   );
 };
