@@ -29,7 +29,7 @@ export const GET_CURRENT_USER = gql`
 `;
 
 export const GET_REPOSITORY = gql`
-  query getRepository($id: ID!) {
+  query getRepository($id: ID!, $first: Int) {
     repository(id: $id) {
       id
       fullName
@@ -41,6 +41,20 @@ export const GET_REPOSITORY = gql`
       reviewCount
       ownerAvatarUrl
       url
+      reviews(first: $first) {
+        edges {
+          node {
+            id
+            text
+            rating
+            createdAt
+            user {
+              id
+              username
+            }
+          }
+        }
+      }
     }
   }
 `;
