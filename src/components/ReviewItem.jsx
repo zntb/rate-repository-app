@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
   date: { color: '#666', marginBottom: 5 },
 });
 
-const ReviewItem = ({ review }) => {
-  const { text, rating, createdAt, user } = review;
+const ReviewItem = ({ review, showRepositoryName = false }) => {
+  const { text, rating, createdAt, user, repository } = review;
   const formattedDate = format(new Date(createdAt), 'dd.MM.yyyy');
 
   return (
@@ -34,7 +34,11 @@ const ReviewItem = ({ review }) => {
         <Text style={styles.rating}>{rating}</Text>
       </View>
       <View style={styles.reviewContent}>
-        <Text style={styles.username}>{user.username}</Text>
+        {showRepositoryName ? (
+          <Text style={styles.username}>{repository.fullName}</Text>
+        ) : (
+          <Text style={styles.username}>{user?.username || 'Anonymous'}</Text>
+        )}
         <Text style={styles.date}>{formattedDate}</Text>
         <Text>{text}</Text>
       </View>

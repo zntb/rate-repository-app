@@ -664,3 +664,44 @@ export class RepositoryListContainer extends React.Component {
 The final version of the filtering feature should look something like this:
 
 ![Exercise 10.24 - Filtering the reviewed repositories list](assets/18.jpg)
+
+## Exercise 10.25: the user's reviews view
+
+Implement a feature which allows user to see their reviews. Once signed in, the user should be able to access this view by pressing a "My reviews" tab in the app bar. Here is what the review list view should roughly look like:
+
+![Exercise 10.25 - User's reviews view](assets/20.jpg)
+
+Remember that you can fetch the authenticated user from the Apollo Server with the me query. This query returns a `User` type, which has a field `reviews`. If you have already implemented a reusable me query in your code, you can customize this query to fetch the `reviews` field conditionally. This can be done using GraphQL's [include](https://graphql.org/learn/queries/#directives) directive.
+
+Let's say that the current query is implemented roughly in the following manner:
+
+```jsx
+const GET_CURRENT_USER = gql`
+  query {
+    me {
+      # user fields...
+    }
+  }
+`;
+```
+
+You can provide the query with an `includeReviews` argument and use that with the `include` directive:
+
+```jsx
+const GET_CURRENT_USER = gql`
+  query getCurrentUser($includeReviews: Boolean = false) {
+    me {
+      # user fields...
+      reviews @include(if: $includeReviews) {
+        edges {
+          node {
+            # review fields...
+          }
+        }
+      }
+    }
+  }
+`;
+```
+
+The `includeReviews` argument has a default value of `false`, because we don't want to cause additional server overhead unless we explicitly want to fetch authenticated user's reviews. The principle of the `include` directive is quite simple: if the value of the `if` argument is `true`, include the field, otherwise omit it.
