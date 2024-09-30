@@ -1,5 +1,4 @@
 import { Pressable, View, StyleSheet } from 'react-native';
-
 import Text from './Text';
 import theme from '../theme';
 
@@ -10,7 +9,6 @@ const styles = StyleSheet.create({
     minWidth: 64,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: theme.colors.primary,
     borderRadius: theme.roundness,
   },
   text: {
@@ -18,13 +16,28 @@ const styles = StyleSheet.create({
   },
 });
 
-const Button = ({ children, style, ...props }) => {
-  const buttonStyle = [styles.container, style];
+const Button = ({ children, style, type = 'default', ...props }) => {
+  const getBackgroundColor = type => {
+    switch (type) {
+      case 'alertButton':
+        return 'red';
+      default:
+        return theme.colors.primary;
+    }
+  };
+
+  const buttonStyle = [
+    styles.container,
+    { backgroundColor: getBackgroundColor(type) },
+    style,
+  ];
 
   return (
     <Pressable {...props}>
       <View style={buttonStyle}>
-        <Text style={styles.text} fontWeight="bold">{children}</Text>
+        <Text style={styles.text} fontWeight='bold'>
+          {children}
+        </Text>
       </View>
     </Pressable>
   );

@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 });
 
 const MyReviews = () => {
-  const { loading, error, data } = useQuery(GET_CURRENT_USER, {
+  const { loading, error, data, refetch } = useQuery(GET_CURRENT_USER, {
     variables: { includeReviews: true },
     fetchPolicy: 'cache-and-network',
   });
@@ -36,7 +36,11 @@ const MyReviews = () => {
         data={reviews}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <ReviewItem review={item} showRepositoryName={true} />
+          <ReviewItem
+            review={item}
+            showRepositoryName={true}
+            refetch={refetch}
+          />
         )}
       />
     </View>
