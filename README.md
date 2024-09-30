@@ -611,3 +611,56 @@ You can use for example [@react-native-picker/picker](https://docs.expo.dev/vers
 The final version of the feature, depending on the selection component in use, should look something like this:
 
 ![Exercise 10.23 - Sorting the reviewed repositories list](assets/17.jpg)
+
+## Exercise 10.24: filtering the reviewed repositories list
+
+The Apollo Server allows filtering repositories using the repository's name or the owner's username. This can be done using the `searchKeyword` argument in the `repositories` query. Here's an example of how to use the argument in a query:
+
+```graphql
+{
+  repositories(searchKeyword: "ze") {
+    edges {
+      node {
+        id
+        fullName
+      }
+    }
+  }
+}
+```
+
+Implement a feature for filtering the reviewed repositories list based on a keyword. Users should be able to type in a keyword into a text input and the list should be filtered as the user types. You can use a simple `TextInput` component or something a bit fancier such as React Native Paper's [Searchbar](https://callstack.github.io/react-native-paper/docs/components/Searchbar/) component as the text input. Put the text input component in the `FlatList` component's header.
+
+To avoid a multitude of unnecessary requests while the user types the keyword fast, only pick the latest input after a short delay. This technique is often referred to as [debouncing](https://lodash.com/docs/4.17.15#debounce). [use-debounce](https://www.npmjs.com/package/use-debounce) library is a handy hook for debouncing a state variable. Use it with a sensible delay time, such as 500 milliseconds. Store the text input's value by using the `useState` hook and then pass the debounced value to the query as the value of the `searchKeyword` argument.
+
+You probably face an issue that the text input component loses focus after each keystroke. This is because the content provided by the `ListHeaderComponent` prop is constantly unmounted. This can be fixed by turning the component rendering the `FlatList` component into a class component and defining the header's render function as a class property like this:
+
+```jsx
+export class RepositoryListContainer extends React.Component {
+  renderHeader = () => {
+    // this.props contains the component's props
+    const props = this.props;
+
+    // ...
+
+    return (
+      <RepositoryListHeader
+      // ...
+      />
+    );
+  };
+
+  render() {
+    return (
+      <FlatList
+        // ...
+        ListHeaderComponent={this.renderHeader}
+      />
+    );
+  }
+}
+```
+
+The final version of the filtering feature should look something like this:
+
+![Exercise 10.24 - Filtering the reviewed repositories list](assets/18.jpg)

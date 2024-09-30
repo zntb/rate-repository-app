@@ -6,6 +6,7 @@ export const REPOSITORY_BASE_FIELDS = gql`
     name
     ownerName
     fullName
+    ratingAverage
     stargazersCount
     forksCount
     url
