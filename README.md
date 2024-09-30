@@ -549,13 +549,13 @@ Implement a form for creating a review using Formik. The form should have four f
 - Rating is a required number between 0 and 100
 - Review is a optional string
 
-  Explore Yup's documentation to find suitable validators. Use sensible error messages with the validators. The validation message can be defined as the validator method's message argument. You can make the review field expand to multiple lines by using TextInput component's multiline prop.
+  Explore Yup's [documentation](https://github.com/jquense/yup#yup) to find suitable validators. Use sensible error messages with the validators. The validation message can be defined as the validator method's message argument. You can make the review field expand to multiple lines by using TextInput component's [multiline](https://reactnative.dev/docs/textinput#multiline) prop.
 
-You can create a review using the createReview mutation. Check this mutation's arguments in the Apollo Sandbox. You can use the useMutation hook to send a mutation to the Apollo Server.
+You can create a review using the createReview mutation. Check this mutation's arguments in the Apollo Sandbox. You can use the [useMutation](https://www.apollographql.com/docs/react/api/react/hooks/#usemutation) hook to send a mutation to the Apollo Server.
 
-After a successful createReview mutation, redirect the user to the repository's view you implemented in the previous exercise. This can be done with the navigate function after you have obtained it using the useNavigate hook. The created review has a repositoryId field which you can use to construct the route's path.
+After a successful createReview mutation, redirect the user to the repository's view you implemented in the previous exercise. This can be done with the navigate function after you have obtained it using the [useNavigate](https://reactrouter.com/en/main/hooks/use-navigate) hook. The created review has a repositoryId field which you can use to construct the route's path.
 
-To prevent getting cached data with the repository query in the single repository view, use the cache-and-network fetch policy in the query. It can be used with the useQuery hook like this:
+To prevent getting cached data with the repository query in the single repository view, use the cache-and-network [fetch policy](https://www.apollographql.com/docs/react/data/queries/#setting-a-fetch-policy) in the query. It can be used with the useQuery hook like this:
 
 ```jsx
 useQuery(GET_REPOSITORY, {
@@ -571,5 +571,25 @@ The review form should be accessible through the app bar. Create a tab to the ap
 The final version of the review form should look something like this:
 
 ![Exercise 10.21 - Review form](assets/15.jpg)
+
+This screenshot has been taken after invalid form submission to present what the form should look like in an invalid state.
+
+## Exercise 10.22: the sign up form
+
+Implement a sign up form for registering a user using Formik. The form should have three fields: username, password, and password confirmation. Validate the form using Yup schema so that it contains the following validations:
+
+- Username is a required string with a length between 5 and 30
+- Password is a required string with a length between 5 and 50
+- Password confirmation matches the password
+
+The password confirmation field's validation can be a bit tricky, but it can be done for example by using the [oneOf](https://github.com/jquense/yup#schemaoneofarrayofvalues-arrayany-message-string--function-schema-alias-equals) and [ref](https://github.com/jquense/yup#refpath-string-options--contextprefix-string--ref) methods like suggested in [this issue](https://github.com/jaredpalmer/formik/issues/90#issuecomment-354873201).
+
+You can create a new user by using the `createUser` mutation. Find out how this mutation works by exploring the documentation in the Apollo Sandbox. After a successful `createUser` mutation, sign the created user in by using the `useSignIn` hook as we did in the sign in the form. After the user has been signed in, redirect the user to the reviewed repositories list view.
+
+The user should be able to access the sign-up form through the app bar by pressing a "Sign up" tab. This tab should only be visible to users that aren't signed in.
+
+The final version of the sign up form should look something like this:
+
+![Exercise 10.22 - Sign up form](assets/16.jpg)
 
 This screenshot has been taken after invalid form submission to present what the form should look like in an invalid state.
