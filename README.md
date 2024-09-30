@@ -474,3 +474,68 @@ The final version of the single repository view should look something like this:
 ```bash
 npm install expo-linking --legacy-peer-deps
 ```
+
+## Exercise 10.20: repository's review list
+
+Now that we have a view for a single repository, let's display repository's reviews there. Repository's reviews are in the `reviews` field of the `Repository` type in the GraphQL schema. `reviews` is a similar paginated list as in the `repositories` query. Here's an example of getting reviews of a repository:
+
+```graphql
+{
+  repository(id: "jaredpalmer.formik") {
+    id
+    fullName
+    reviews {
+      edges {
+        node {
+          id
+          text
+          rating
+          createdAt
+          user {
+            id
+            username
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+Review's `text` field contains the textual review, `rating` field a numeric rating between 0 and 100, and `createdAt` the date when the review was created. Review's user field contains the reviewer's information, which is of type User.
+
+We want to display reviews as a scrollable list, which makes [FlatList](https://reactnative.dev/docs/flatlist) a suitable component for the job. To display the previous exercise's repository's information at the top of the list, you can use the `FlatList` component's [ListHeaderComponent](https://reactnative.dev/docs/flatlist#listheadercomponent) prop. You can use the [ItemSeparatorComponent](https://reactnative.dev/docs/flatlist#itemseparatorcomponent) to add some space between the items like in the `RepositoryList` component. Here's an example of the structure:
+
+```jsx
+const RepositoryInfo = ({ repository }) => {
+  // Repository's information implemented in the previous exercise
+};
+
+const ReviewItem = ({ review }) => {
+  // Single review item
+};
+
+const SingleRepository = () => {
+  // ...
+
+  return (
+    <FlatList
+      data={reviews}
+      renderItem={({ item }) => <ReviewItem review={item} />}
+      keyExtractor={({ id }) => id}
+      ListHeaderComponent={() => <RepositoryInfo repository={repository} />}
+      // ...
+    />
+  );
+};
+
+export default SingleRepository;
+```
+
+The final version of the repository's reviews list should look something like this:
+
+![Exercise 10.20 - Single repository reviews list](assets/14.jpg)
+
+The date under the reviewer's username is the creation date of the review, which is in the `createdAt` field of the `Review` type. The date format should be user-friendly such as date.month.year. You can for example install the [date-fns](https://date-fns.org/) library and use the [format](https://date-fns.org/v2.28.0/docs/format) function for formatting the creation date.
+
+The round shape of the rating's container can be achieved with the `borderRadius` style property. You can make it round by fixing the container's `width` and `height` style property and setting the border-radius as `width / 2`.
