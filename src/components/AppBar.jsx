@@ -55,7 +55,9 @@ const AppBar = () => {
   const authStorage = useAuthStorage();
   const navigate = useNavigate();
 
-  const { data } = useQuery(GET_CURRENT_USER);
+  const { data } = useQuery(GET_CURRENT_USER, {
+    fetchPolicy: 'cache-and-network',
+  });
   const currentUser = data?.me;
 
   const onSignOut = async () => {
@@ -69,7 +71,10 @@ const AppBar = () => {
       <ScrollView style={styles.scrollView} horizontal>
         <AppBarTab to='/'>Repositories</AppBarTab>
         {currentUser ? (
-          <AppBarTab onPress={onSignOut}>Sign out</AppBarTab>
+          <>
+            <AppBarTab to='/create-review'>Create a review</AppBarTab>
+            <AppBarTab onPress={onSignOut}>Sign out</AppBarTab>
+          </>
         ) : (
           <AppBarTab to='/sign-in'>Sign in</AppBarTab>
         )}

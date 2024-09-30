@@ -539,3 +539,37 @@ The final version of the repository's reviews list should look something like th
 The date under the reviewer's username is the creation date of the review, which is in the `createdAt` field of the `Review` type. The date format should be user-friendly such as date.month.year. You can for example install the [date-fns](https://date-fns.org/) library and use the [format](https://date-fns.org/v2.28.0/docs/format) function for formatting the creation date.
 
 The round shape of the rating's container can be achieved with the `borderRadius` style property. You can make it round by fixing the container's `width` and `height` style property and setting the border-radius as `width / 2`.
+
+## Exercise 10.21: the review form
+
+Implement a form for creating a review using Formik. The form should have four fields: repository owner's GitHub username (for example "jaredpalmer"), repository's name (for example "formik"), a numeric rating, and a textual review. Validate the fields using Yup schema so that it contains the following validations:
+
+- Repository owner's username is a required string
+- Repository's name is a required string
+- Rating is a required number between 0 and 100
+- Review is a optional string
+
+  Explore Yup's documentation to find suitable validators. Use sensible error messages with the validators. The validation message can be defined as the validator method's message argument. You can make the review field expand to multiple lines by using TextInput component's multiline prop.
+
+You can create a review using the createReview mutation. Check this mutation's arguments in the Apollo Sandbox. You can use the useMutation hook to send a mutation to the Apollo Server.
+
+After a successful createReview mutation, redirect the user to the repository's view you implemented in the previous exercise. This can be done with the navigate function after you have obtained it using the useNavigate hook. The created review has a repositoryId field which you can use to construct the route's path.
+
+To prevent getting cached data with the repository query in the single repository view, use the cache-and-network fetch policy in the query. It can be used with the useQuery hook like this:
+
+```jsx
+useQuery(GET_REPOSITORY, {
+  fetchPolicy: 'cache-and-network',
+  // Other options
+});
+```
+
+**Note** that only an existing public GitHub repository can be reviewed and a user can review the same repository only once. You don't have to handle these error cases, but the error payload includes specific codes and messages for these errors. You can try out your implementation by reviewing one of your own public repositories or any other public repository.
+
+The review form should be accessible through the app bar. Create a tab to the app bar with a label "Create a review". This tab should only be visible to users who have signed in. You will also need to define a route for the review form.
+
+The final version of the review form should look something like this:
+
+![Exercise 10.21 - Review form](assets/15.jpg)
+
+This screenshot has been taken after invalid form submission to present what the form should look like in an invalid state.
