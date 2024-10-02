@@ -719,3 +719,65 @@ Here is the confirmation alert that should pop out once the user presses the del
 ![Exercise 10.26 - Review actions - confirmation alert](assets/22.jpg)
 
 You can delete a review using the `deleteReview` mutation. This mutation has a single argument, which is the id of the review to be deleted. After the mutation has been performed, the easiest way to update the review list's query is to call the [refetch](https://www.apollographql.com/docs/react/data/queries/#refetching) function.
+
+## Exercise 10.27: infinite scrolling for the repository's reviews list
+
+Implement infinite scrolling for the repository's reviews list. The `Repository` type's reviews field has the `first` and `after` arguments similar to the repositories query. `ReviewConnection` type also has the `pageInfo` field just like the `RepositoryConnection` type.
+
+Here's an example query:
+
+```graphql
+{
+  repository(id: "jaredpalmer.formik") {
+    id
+    fullName
+    reviews(
+      first: 2
+      after: "WyIxYjEwZTRkOC01N2VlLTRkMDAtODg4Ni1lNGEwNDlkN2ZmOGYuamFyZWRwYWxtZXIuZm9ybWlrIiwxNTg4NjU2NzUwMDgwXQ=="
+    ) {
+      totalCount
+      edges {
+        node {
+          id
+          text
+          rating
+          createdAt
+          repositoryId
+          user {
+            id
+            username
+          }
+        }
+        cursor
+      }
+      pageInfo {
+        endCursor
+        startCursor
+        hasNextPage
+      }
+    }
+  }
+}
+```
+
+The cache's field policy can be similar as with the `repositories` query:
+
+```jsx
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        repositories: relayStylePagination(),
+      },
+    },
+
+    Repository: {
+      fields: {
+        reviews: relayStylePagination(),
+      },
+    },
+  },
+});
+```
+
+As with the reviewed repositories list, use a relatively small `first` argument value while you are trying out the infinite scrolling. You might need to create a few new users and use them to create a few new reviews to make the reviews list long enough to scroll. Set the value of the `first` argument high enough so that the `onEndReach` handler isn't called immediately after the view is loaded, but low enough so that you can see that more reviews are fetched once you reach the end of the list. Once everything is working as intended you can use a larger value for the `first` argument.

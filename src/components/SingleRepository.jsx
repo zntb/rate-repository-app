@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 const SingleRepository = () => {
   const { id } = useParams();
   const { data, loading, error } = useQuery(GET_REPOSITORY, {
-    variables: { id, first: 10 },
+    variables: { id, first: 4 },
     fetchPolicy: 'cache-and-network',
   });
 
@@ -26,9 +26,13 @@ const SingleRepository = () => {
   const repository = data.repository;
   const reviews = repository.reviews.edges.map(edge => edge.node);
 
+  const uniqueReviews = Array.from(
+    new Set(reviews.map(review => review.id)),
+  ).map(id => reviews.find(review => review.id === id));
+
   return (
     <FlatList
-      data={reviews}
+      data={uniqueReviews}
       renderItem={({ item }) => (
         <ReviewItem review={item} showActions={false} />
       )}

@@ -43,13 +43,21 @@ const ReviewForm = () => {
         refetchQueries: [
           {
             query: GET_REPOSITORY,
-            variables: { id: data?.createReview?.repositoryId },
+            variables: { id: data?.createReview?.repository.id },
           },
         ],
       });
 
+      console.log({
+        ownerName,
+        repositoryName,
+        rating: Number(rating),
+        text,
+        repositoryId: data?.createReview?.repository.id,
+      });
+
       if (data && data.createReview) {
-        const repositoryId = data.createReview.repositoryId;
+        const repositoryId = data.createReview.repository.id;
         navigate(`/repository/${repositoryId}`);
       } else {
         console.error('createReview response is undefined or invalid:', data);
