@@ -7,30 +7,41 @@ export const GET_REPOSITORIES = gql`
     $orderBy: AllRepositoriesOrderBy
     $orderDirection: OrderDirection
     $searchKeyword: String
+    $first: Int
+    $after: String
   ) {
     repositories(
       orderBy: $orderBy
       orderDirection: $orderDirection
       searchKeyword: $searchKeyword
+      first: $first
+      after: $after
     ) {
       edges {
         node {
           ...repositoryBaseFields
-          ratingAverage
-          reviewCount
         }
+        cursor
+      }
+      pageInfo {
+        endCursor
+        startCursor
+        hasNextPage
       }
     }
   }
-
   ${REPOSITORY_BASE_FIELDS}
 `;
 
 export const GET_CURRENT_USER = gql`
-  query getCurrentUser($includeReviews: Boolean = false) {
+  query getCurrentUser(
+    $includeReviews: Boolean = false
+    $first: Int
+    $after: String
+  ) {
     me {
       ...userBaseFields
-      reviews @include(if: $includeReviews) {
+      reviews(first: $first, after: $after) @include(if: $includeReviews) {
         edges {
           node {
             id
@@ -41,7 +52,17 @@ export const GET_CURRENT_USER = gql`
               id
               fullName
             }
+            user {
+              id
+              username
+            }
           }
+          cursor
+        }
+        pageInfo {
+          endCursor
+          startCursor
+          hasNextPage
         }
       }
     }
