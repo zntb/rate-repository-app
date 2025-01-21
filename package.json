@@ -43,7 +43,7 @@
     "react-native-web": "~0.19.6",
     "react-router-native": "^6.28.0",
     "typescript": "^5.7.2",
-    "use-debounce": "^10.0.3",
+    "use-debounce": "^10.0.4",
     "yup": "^1.6.1"
   },
   "devDependencies": {
