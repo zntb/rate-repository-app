@@ -41,7 +41,7 @@
     "react-native": "0.85.0",
     "react-native-paper": "^5.14.4",
     "react-native-web": "~0.21.2",
-    "react-router-native": "^6.30.3",
+    "react-router-native": "^6.30.4",
     "typescript": "^5.9.3",
     "use-debounce": "^10.1.0",
     "yup": "^1.7.1"
